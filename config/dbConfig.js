@@ -2,11 +2,10 @@ const env = process.env
 
 const config = {
     db: { 
-      user:'root',
-      host: 'localhost',
-      password: 'root',
-      database: 'movieDB',
-      port: 3306
+      user: env.DB_USER,
+      host: env.DB_HOST,
+      password: env.DB_PASSWORD,
+      database:  env.DB_NAME
     },
   };
   
