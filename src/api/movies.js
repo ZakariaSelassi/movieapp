@@ -1,7 +1,26 @@
 const express = require('express')
 const router = express.Router();
 const db = require('../model/db')
+// 0. create a movie
+router.post('/movies', (req, res) => {
+    console.log(req.body)
+    const {title,released,genre,description,language,country,type} = req.body
+    const sql = `INSERT INTO movie (title,released,genre,description,language,country,type) VALUES (?,?,?,?,?,?,?)`
+    db.dbConnection().query(sql,[
+        title,
+        released,
+        genre,
+        description,
+        language,
+        country,
+        type
+        
+    ], (err, result) => {
+        if (err) throw err
+        res.json({message: "Successfully done !", data: req.body})
+    })
 
+})
 // 1. GET all movies
 router.get('/movies', async (req, res) => {
     db.dbConnection().query(
@@ -41,8 +60,6 @@ router.delete('/movies/:id', async (req,res) => {
         })
 })
 // 4. Update one movie 
-
-
 router.put('/movies/:id', async (req,res) => {
     const id = req.params.id
     console.log(req.body)
