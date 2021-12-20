@@ -3,18 +3,17 @@ const router = express.Router();
 const db = require('../model/db')
 // 0. create a movie
 router.post('/movies', (req, res) => {
-    console.log(req.body)
-    const {title,released,genre,description,language,country,type} = req.body
-    const sql = `INSERT INTO movie (title,released,genre,description,language,country,type) VALUES (?,?,?,?,?,?,?)`
-    db.dbConnection().query(sql,[
-        title,
-        released,
-        genre,
-        description,
-        language,
-        country,
-        type
-        
+    
+     const sql = `INSERT INTO movie (title,released,genre,description,language,country,type) VALUES (?,?,?,?,?,?,?)`
+        db.dbConnection().query(sql,[
+        req.body[0].title,
+        req.body[0].released,
+        req.body[0].genre,
+        req.body[0].description,
+        req.body[0].language,
+        req.body[0].country,
+        req.body[0].type
+  
     ], (err, result) => {
         if (err) throw err
         res.json({message: "Successfully done !", data: req.body})
@@ -38,7 +37,7 @@ router.get('/movies/:id', async (req,res) => {
         const id = req.params.id
         console.log(id)
        db.dbConnection().query(
-        `SELECT movieName,movieCountry from movie where idMovie = ${id}`, (err,result) => {
+        `SELECT title,released,genre,description,language,country,type from movie where id = ${id}`, (err,result) => {
             if(err){
                 res.json({erro: "something went wrong !"})
             }else{
@@ -51,7 +50,7 @@ router.get('/movies/:id', async (req,res) => {
 router.delete('/movies/:id', async (req,res) => {
     const id = req.params.id
     db.dbConnection().query(
-        `DELETE from movie where idMovie = ${id}`, (err,result) => {
+        `DELETE from movie where id = ${id}`, (err,result) => {
             if(err){
                 res.json({erro: "something went wrong !"})
             }else{
@@ -63,13 +62,13 @@ router.delete('/movies/:id', async (req,res) => {
 router.put('/movies/:id', async (req,res) => {
     const id = req.params.id
     console.log(req.body)
-    const {movieName,movieCountry} = req.body
+    const {title,released,genre,description,language,country,type} = req.body
     db.dbConnection().query(
-        `UPDATE movie SET movieName = ?, movieCountry = ?  WHERE idMovie = ${id}`, [movieName,movieCountry,id],(err,result) => {
+        `UPDATE movie SET title = ? ,released = ? , genre = ?,description = ? ,language = ? ,country = ?,type = ?  WHERE id = ${id}`, [title,released,genre,description,language,country,type,id],(err,result) => {
             if(err){
                 res.json({erro: "something went wrong !"})
             }else{
-                res.json({message: "Successfully Update!", data: result})
+                res.json({message: "Successfully Update!", data: result.data})
             }
         })
 })
